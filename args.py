@@ -12,7 +12,7 @@ class ModelArguments:
 
     model_name: str = field(
         metadata={"help": "Path to pretrained model or model identifier from huggingface.co/models"},
-        default="meta-llama/Llama-3.1-8B"
+        default="meta-llama/Llama-3.1-8B" #  meta-llama/Llama-3.1-8B mistralai/Mistral-7B-v0.3
     )
     
     use_fast: bool = field(

@@ -163,11 +163,15 @@ def init_layer(replace_model_name, config, device, model, best_layer, layer_inte
             
         return layer_dict
 
-    if replace_model_name == "opt_layer":
+    # 根据模型名称初始化对应的替换层
+    if replace_model_name.lower() == "opt_layer":
         replace_model = OPTDecoderLayer(config).to(device)
-    elif replace_model_name == "llama_layer":
+    elif replace_model_name.lower() == "llama_layer":
         replace_model = LlamaDecoderLayer(config, 0).to(device)
+    else:
+        raise ValueError(f"不支持的模型类型: {replace_model_name}")
 
+    # 获取模型状态字典
     model_dict = model.state_dict()
     layer_dict = replace_model.state_dict()
     
@@ -194,7 +198,7 @@ def lightweight_model_train(model, tokenizer, device, layer_intervals, num_layer
     elif "llama" in model_name or "Llama" in model_name:
         replace_model = init_layer("llama_layer", config, device, model, best_layer, layer_intervals)
     else:
-        raise ValueError(f"Unknown model type: {replace_model_name}")
+        raise ValueError(f"Unknown model type: {model_name}")
     
     def prepare_dataset_for_training(dataset, model, device):
         input_list, output_list = get_data(model, dataset, device, layer_intervals, best_layer, tokenizer, batch_size)
